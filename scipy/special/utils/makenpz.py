@@ -58,21 +58,19 @@ def savez_compress(file, *args, **kwds):
             raise ValueError("Cannot use un-named variables and keyword %s" % key)
         namedict[key] = val
 
-    zip = zipfile.ZipFile(file, mode="w", compression=zipfile.ZIP_DEFLATED)
+    with zipfile.ZipFile(file, mode="w", compression=zipfile.ZIP_DEFLATED) as zip:
 
-    # Stage arrays in a temporary file on disk, before writing to zip.
-    fd, tmpfile = tempfile.mkstemp(suffix='-numpy.npy')
-    os.close(fd)
-    try:
-        for key, val in namedict.items():
-            fname = key + '.npy'
-            with open(tmpfile, 'wb') as fid:
-                np.lib.format.write_array(fid, np.asanyarray(val))
-            zip.write(tmpfile, arcname=fname)
-    finally:
-        os.remove(tmpfile)
-
-    zip.close()
+        # Stage arrays in a temporary file on disk, before writing to zip.
+        fd, tmpfile = tempfile.mkstemp(suffix='-numpy.npy')
+        os.close(fd)
+        try:
+            for key, val in namedict.items():
+                fname = key + '.npy'
+                with open(tmpfile, 'wb') as fid:
+                    np.lib.format.write_array(fid, np.asanyarray(val))
+                zip.write(tmpfile, arcname=fname)
+        finally:
+            os.remove(tmpfile)
 
 
 if __name__ == "__main__":

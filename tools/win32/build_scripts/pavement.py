@@ -125,22 +125,22 @@ def get_sdist_tarball(src_root):
     return name
 
 def prepare_scipy_sources(src_root, bootstrap):
-    zid = ZipFile(pjoin(src_root, 'dist', get_sdist_tarball(src_root)))
-    root = 'scipy-%s' % get_scipy_version(src_root)
+    with ZipFile(pjoin(src_root, 'dist', get_sdist_tarball(src_root))) as zid:
+        root = 'scipy-%s' % get_scipy_version(src_root)
 
-    # From the sdist-built tarball, extract all files into bootstrap directory,
-    # but removing the scipy-VERSION head path
-    for name in zid.namelist():
-        cnt = zid.read(name)
-        if name.startswith(root):
-            # XXX: even on windows, the path sep in zip is '/' ?
-            name = name.split('/', 1)[1]
-        newname = pjoin(bootstrap, name)
+        # From the sdist-built tarball, extract all files into bootstrap directory,
+        # but removing the scipy-VERSION head path
+        for name in zid.namelist():
+            cnt = zid.read(name)
+            if name.startswith(root):
+                # XXX: even on windows, the path sep in zip is '/' ?
+                name = name.split('/', 1)[1]
+            newname = pjoin(bootstrap, name)
 
-        if not pexists(dirname(newname)):
-            os.makedirs(dirname(newname))
-        with open(newname, 'wb') as fid:
-            fid.write(cnt)
+            if not pexists(dirname(newname)):
+                os.makedirs(dirname(newname))
+            with open(newname, 'wb') as fid:
+                fid.write(cnt)
 
 def prepare_nsis_script(bdir, pyver, numver):
     tpl = pjoin('nsis_scripts', 'scipy-superinstaller.nsi.in')
