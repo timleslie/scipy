@@ -378,15 +378,15 @@ def generate_module(module_string, module_file):
     """
     file_changed = 1
     if os.path.exists(module_file):
-        f = open(module_file,'r')
-        old_string = f.read()
-        f.close()
+        with open(module_file,'r') as f:
+            old_string = f.read()
+
         if old_string == module_string:
             file_changed = 0
     if file_changed:
-        f = open(module_file,'w')
-        f.write(module_string)
-        f.close()
+        with open(module_file,'w') as f:
+            f.write(module_string)
+
     return module_file
 
 def assign_variable_types(variables,local_dict = {}, global_dict = {},

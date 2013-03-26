@@ -172,30 +172,29 @@ def write(filename, rate, data):
       (Nsamples, Nchannels).
 
     """
-    fid = open(filename, 'wb')
-    fid.write(b'RIFF')
-    fid.write(b'\x00\x00\x00\x00')
-    fid.write(b'WAVE')
-    # fmt chunk
-    fid.write(b'fmt ')
-    if data.ndim == 1:
-        noc = 1
-    else:
-        noc = data.shape[1]
-    bits = data.dtype.itemsize * 8
-    sbytes = rate*(bits // 8)*noc
-    ba = noc * (bits // 8)
-    fid.write(struct.pack('<ihHIIHH', 16, 1, noc, rate, sbytes, ba, bits))
-    # data chunk
-    fid.write(b'data')
-    fid.write(struct.pack('<i', data.nbytes))
-    import sys
-    if data.dtype.byteorder == '>' or (data.dtype.byteorder == '=' and sys.byteorder == 'big'):
-        data = data.byteswap()
-    data.tofile(fid)
-    # Determine file size and place it in correct
-    #  position at start of the file.
-    size = fid.tell()
-    fid.seek(4)
-    fid.write(struct.pack('<i', size-8))
-    fid.close()
+    with open(filename, 'wb') as fid:
+        fid.write(b'RIFF')
+        fid.write(b'\x00\x00\x00\x00')
+        fid.write(b'WAVE')
+        # fmt chunk
+        fid.write(b'fmt ')
+        if data.ndim == 1:
+            noc = 1
+        else:
+            noc = data.shape[1]
+        bits = data.dtype.itemsize * 8
+        sbytes = rate*(bits // 8)*noc
+        ba = noc * (bits // 8)
+        fid.write(struct.pack('<ihHIIHH', 16, 1, noc, rate, sbytes, ba, bits))
+        # data chunk
+        fid.write(b'data')
+        fid.write(struct.pack('<i', data.nbytes))
+        import sys
+        if data.dtype.byteorder == '>' or (data.dtype.byteorder == '=' and sys.byteorder == 'big'):
+            data = data.byteswap()
+        data.tofile(fid)
+        # Determine file size and place it in correct
+        #  position at start of the file.
+        size = fid.tell()
+        fid.seek(4)
+        fid.write(struct.pack('<i', size-8))

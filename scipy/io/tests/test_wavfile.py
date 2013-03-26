@@ -42,9 +42,8 @@ def test_read_2():
 
 def test_read_fail():
     for mmap in [False, True]:
-        fp = open(datafile('example_1.nc'))
-        assert_raises(ValueError, wavfile.read, fp, mmap=mmap)
-        fp.close()
+        with open(datafile('example_1.nc')) as fp:
+            assert_raises(ValueError, wavfile.read, fp, mmap=mmap)
 
 def _check_roundtrip(rate, dtype, channels):
     fd, tmpfile = tempfile.mkstemp(suffix='.wav')

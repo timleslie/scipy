@@ -496,11 +496,8 @@ def hb_read(file):
         return hb.read_matrix()
 
     if isinstance(file, string_types):
-        fid = open(file)
-        try:
+        with open(file) as fid:
             return _get_matrix(fid)
-        finally:
-            fid.close()
     else:
         return _get_matrix(file)
 
@@ -540,11 +537,8 @@ def hb_write(file, m, hb_info=None):
         return hb.write_matrix(m)
 
     if isinstance(file, string_types):
-        fid = open(file, "w")
-        try:
+        with open(file, "w") as fid:
             return _set_matrix(fid)
-        finally:
-            fid.close()
     else:
         return _set_matrix(file)
 

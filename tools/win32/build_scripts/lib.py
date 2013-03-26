@@ -28,8 +28,8 @@ def get_scipy_version(src_root):
     if not exists(version_file):
         raise IOError("file %s not found" % version_file)
 
-    fid = open(version_file, "r")
-    version, rc, isdev = parse_verstring(fid.readlines())
+    with open(version_file, "r") as fid:
+        version, rc, isdev = parse_verstring(fid.readlines())
 
     verstr = ".".join([str(i) for i in version])
     if rc > 0:

@@ -261,14 +261,13 @@ class FileConverter(TestCase):
     def test_py_to_file(self):
         import tempfile
         file_name = tempfile.mktemp()
-        file = open(file_name,'w')
-        code = """
-               fprintf(file,"hello bob");
-               """
-        inline_tools.inline(code,['file'],compiler=self.compiler,force=1)
-        file.close()
-        file = open(file_name,'r')
-        assert_(file.read() == "hello bob")
+        with open(file_name,'w') as file:
+            code = """
+                   fprintf(file,"hello bob");
+                   """
+            inline_tools.inline(code,['file'],compiler=self.compiler,force=1)
+        with open(file_name,'r') as file:
+            assert_(file.read() == "hello bob")
 
     @dec.slow
     def test_file_to_py(self):
@@ -285,8 +284,8 @@ class FileConverter(TestCase):
                                    force=1)
         file.write("hello fred")
         file.close()
-        file = open(file_name,'r')
-        assert_(file.read() == "hello fred")
+        with open(file_name,'r') as file:
+            assert_(file.read() == "hello fred")
 
 
 #----------------------------------------------------------------------------

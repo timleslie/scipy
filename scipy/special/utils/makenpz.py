@@ -66,15 +66,9 @@ def savez_compress(file, *args, **kwds):
     try:
         for key, val in namedict.items():
             fname = key + '.npy'
-            fid = open(tmpfile, 'wb')
-            try:
+            with open(tmpfile, 'wb') as fid:
                 np.lib.format.write_array(fid, np.asanyarray(val))
-                fid.close()
-                fid = None
-                zip.write(tmpfile, arcname=fname)
-            finally:
-                if fid:
-                    fid.close()
+            zip.write(tmpfile, arcname=fname)
     finally:
         os.remove(tmpfile)
 

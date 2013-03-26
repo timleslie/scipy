@@ -486,10 +486,8 @@ def lena():
     """
     import pickle, os
     fname = os.path.join(os.path.dirname(__file__),'lena.dat')
-    f = open(fname,'rb')
-    lena = array(pickle.load(f))
-    f.close()
-    return lena
+    with open(fname,'rb') as f:
+        return array(pickle.load(f))
 
 def ascent():
     """
@@ -524,10 +522,8 @@ def ascent():
     """
     import pickle, os
     fname = os.path.join(os.path.dirname(__file__),'ascent.dat')
-    f = open(fname,'rb')
-    ascent = array(pickle.load(f))
-    f.close()
-    return ascent
+    with open(fname,'rb') as f:
+        return array(pickle.load(f))
 
 def face(gray=False):
     """

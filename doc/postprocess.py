@@ -21,18 +21,14 @@ def main():
         p.error('unknown mode %s' % mode)
 
     for fn in args:
-        f = open(fn, 'r')
-        try:
+        with open(fn, 'r') as f:
             if mode == 'html':
                 lines = process_html(fn, f.readlines())
             elif mode == 'tex':
                 lines = process_tex(f.readlines())
-        finally:
-            f.close()
 
-        f = open(fn, 'w')
-        f.write("".join(lines))
-        f.close()
+        with open(fn, 'w') as f:
+            f.write("".join(lines))
 
 def process_html(fn, lines):
     return lines

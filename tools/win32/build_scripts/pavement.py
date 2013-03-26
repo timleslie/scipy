@@ -139,22 +139,21 @@ def prepare_scipy_sources(src_root, bootstrap):
 
         if not pexists(dirname(newname)):
             os.makedirs(dirname(newname))
-        fid = open(newname, 'wb')
-        fid.write(cnt)
+        with open(newname, 'wb') as fid:
+            fid.write(cnt)
 
 def prepare_nsis_script(bdir, pyver, numver):
     tpl = pjoin('nsis_scripts', 'scipy-superinstaller.nsi.in')
-    source = open(tpl, 'r')
-    target = open(pjoin(bdir, 'scipy-superinstaller.nsi'), 'w')
-
-    installer_name = 'scipy-%s-win32-superpack-python%s.exe' % (numver, pyver)
-    cnt = "".join(source.readlines())
+    with open(tpl, 'r') as source:
+        installer_name = 'scipy-%s-win32-superpack-python%s.exe' % (numver, pyver)
+        cnt = "".join(source.readlines())
     cnt = cnt.replace('@SCIPY_INSTALLER_NAME@', installer_name)
     for arch in ['nosse', 'sse2', 'sse3']:
         cnt = cnt.replace('@%s_BINARY@' % arch.upper(),
                           get_binary_name(arch, numver))
 
-    target.write(cnt)
+    with open(pjoin(bdir, 'scipy-superinstaller.nsi'), 'w') as target:
+        target.write(cnt)
 
 def bootstrap_dir(pyver):
     return pjoin(BUILD_ROOT, "bootstrap-%s" % pyver)
@@ -174,9 +173,8 @@ def write_site_cfg(arch, cwd=None):
     scfg = pjoin(cwd, "site.cfg")
     if pexists(scfg):
         os.remove(scfg)
-    f = open(scfg, 'w')
-    f.writelines(SITECFG[arch])
-    f.close()
+    with open(scfg, 'w') as f:
+        f.writelines(SITECFG[arch])
 
 def move_binary(arch, pyver, cwd, scipy_verstr):
     if not pexists(pjoin(cwd, "binaries")):
@@ -229,17 +227,14 @@ def raw_clean_bootstrap(pyver):
 def raw_build_sdist(cwd):
     cmd = ["python", "setup.py", "sdist", "--format=zip"]
 
-    build_log = "sdist.log"
-    f = open(build_log, 'w')
     try:
-        try:
+        build_log = "sdist.log"
+        with open(build_log, 'w') as f:
             st = subprocess.call(cmd, #shell = True,
                             stderr = subprocess.STDOUT, stdout = f,
                             cwd=cwd)
             if st:
                 raise RuntimeError("The cmd failed with status %d" % st)
-        finally:
-            f.close()
     except (subprocess.CalledProcessError, RuntimeError), e:
         print e
         msg = """
@@ -269,18 +264,14 @@ def raw_build_arch(pyver, arch, src_root):
     else:
         cmd = [get_python_exec(pyver), "setup.py", "build", "-c", "mingw32",
                "bdist_wininst"]
-    build_log = "build-%s-%s.log" % (arch, pyver)
-    f = open(build_log, 'w')
-
     try:
-        try:
+        build_log = "build-%s-%s.log" % (arch, pyver)
+        with open(build_log, 'w') as f:
             st = subprocess.call(cmd, #shell = True,
                             stderr = subprocess.STDOUT, stdout = f,
                             cwd=bdir)
             if st:
                 raise RuntimeError("The cmd failed with status %d" % st)
-        finally:
-            f.close()
     except (subprocess.CalledProcessError, RuntimeError), e:
         print e
         msg = """

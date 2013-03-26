@@ -70,9 +70,8 @@ def configuration(parent_package='',top_path=None):
             target = join(build_dir,target_dir,'cblas.pyf')
             from distutils.dep_util import newer
             if newer(__file__,target):
-                f = open(target,'w')
-                f.write(tmpl_empty_cblas_pyf)
-                f.close()
+                with open(target,'w') as f:
+                    f.write(tmpl_empty_cblas_pyf)
         else:
             target = ext.depends[0]
             assert os.path.basename(target)=='cblas.pyf.src'

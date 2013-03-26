@@ -133,8 +133,8 @@ def _raw_data(line):
     return l
 
 def parse_ipp_file(filename):
-    a = open(filename, 'r')
-    lines = a.readlines()
+    with open(filename, 'r') as a:
+        lines = a.readlines()
     data = {}
     i = 0
     while (i < len(lines)):
@@ -167,12 +167,9 @@ def parse_ipp_file(filename):
     return data
 
 def dump_dataset(filename, data):
-    fid = open(filename, 'w')
-    try:
+    with open(filename, 'w') as fid:
         for line in data:
             fid.write("%s\n" % ",".join(line))
-    finally:
-        fid.close()
 
 def dump_datasets(filename):
     base, ext = os.path.splitext(os.path.basename(filename))

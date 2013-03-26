@@ -12,12 +12,9 @@ class TestDefaultDir(TestCase):
     def test_is_writable(self):
         path = catalog.default_dir()
         name = os.path.join(path,'dummy_catalog')
-        test_file = open(name,'w')
-        try:
+        with open(name,'w') as test_file:
             test_file.write('making sure default location is writable\n')
-        finally:
-            test_file.close()
-            os.remove(name)
+        os.remove(name)
 
 
 class TestOsDependentCatalogName(TestCase):
@@ -230,12 +227,9 @@ class TestCatalog(TestCase):
         """
         q = catalog.catalog()
         file = q.get_writable_file()
-        try:
-            f = open(file,'w')
+        with open(file,'w') as f:
             f.write('bob')
-        finally:
-            f.close()
-            os.remove(file)
+        os.remove(file)
 
     def test_writable_with_bad_path(self):
         """ There should always be a writable file -- even if search paths contain
@@ -248,11 +242,8 @@ class TestCatalog(TestCase):
         os.environ['PYTHONCOMPILED'] = sep.join(('_bad_path_name_'))
         q = catalog.catalog()
         file = q.get_writable_file()
-        try:
-            f = open(file,'w')
+        with open(file,'w') as f:
             f.write('bob')
-        finally:
-            f.close()
         os.remove(file)
 
     def test_writable_dir(self):
@@ -261,12 +252,9 @@ class TestCatalog(TestCase):
         q = catalog.catalog()
         d = q.get_writable_dir()
         file = os.path.join(d,'some_silly_file')
-        try:
-            f = open(file,'w')
+        with open(file,'w') as f:
             f.write('bob')
-        finally:
-            f.close()
-            os.remove(file)
+        os.remove(file)
 
     def test_unique_module_name(self):
         """ Check that we can create a file in the writable directory
@@ -276,11 +264,8 @@ class TestCatalog(TestCase):
         cfile1 = file+'.cpp'
         assert_(not os.path.exists(cfile1))
         # Make sure it is writable
-        try:
-            f = open(cfile1,'w')
+        with open(cfile1,'w') as f:
             f.write('bob')
-        finally:
-            f.close()
         # try again with same code fragment -- should get unique name
         file = q.unique_module_name('bob')
         cfile2 = file+'.cpp'

@@ -349,16 +349,16 @@ def prepare_nsis_script(pyver, numver):
         os.makedirs(options.superpack.builddir)
 
     tpl = os.path.join('tools/win32/build_scripts/nsis_scripts', 'scipy-superinstaller.nsi.in')
-    source = open(tpl, 'r')
-    target = open(os.path.join(options.superpack.builddir, 'scipy-superinstaller.nsi'), 'w')
+    with open(tpl, 'r') as source:
+        cnt = "".join(source.readlines())
 
     installer_name = superpack_name(pyver, numver)
-    cnt = "".join(source.readlines())
     cnt = cnt.replace('@SCIPY_INSTALLER_NAME@', installer_name)
     for arch in ['nosse', 'sse2', 'sse3']:
         cnt = cnt.replace('@%s_BINARY@' % arch.upper(),
                           internal_wininst_name(arch))
-    target.write(cnt)
+    with open(os.path.join(options.superpack.builddir, 'scipy-superinstaller.nsi'), 'w') as target:
+        target.write(cnt)
 
 @task
 def bdist_wininst_nosse(options):
@@ -617,13 +617,13 @@ def write_release_task(filename='NOTES.txt'):
     if target.exists():
         target.remove()
     source.copy(target)
-    ftarget = open(str(target), 'a')
-    ftarget.writelines("""
+    with open(str(target), 'a') as ftarget:
+        ftarget.writelines("""
 Checksums
 =========
 
 """)
-    ftarget.writelines(['%s\n' % c for c in compute_md5()])
+        ftarget.writelines(['%s\n' % c for c in compute_md5()])
 
 
 def write_log_task(filename='Changelog'):
@@ -632,9 +632,8 @@ def write_log_task(filename='Changelog'):
             stdout=subprocess.PIPE)
 
     out = st.communicate()[0]
-    a = open(filename, 'w')
-    a.writelines(out)
-    a.close()
+    with open(filename, 'w') as a:
+        a.writelines(out)
 
 @task
 def write_release():

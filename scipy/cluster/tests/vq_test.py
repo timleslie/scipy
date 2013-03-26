@@ -27,11 +27,10 @@ def python_vq(all_data,code_book):
     return codes1,dist1
 
 def read_data(name):
-    f = open(name,'r')
-    data = []
-    for line in f.readlines():
-        data.append(list(map(float,string.split(line))))
-    f.close()
+    with open(name,'r') as f:
+        data = []
+        for line in f.readlines():
+            data.append(list(map(float,string.split(line))))
     return array(data)
 
 def main():

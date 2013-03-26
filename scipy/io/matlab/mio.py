@@ -50,8 +50,8 @@ def find_mat_file(file_name, appendmat=True):
             if appendmat:
                 test_name += ".mat"
             try:
-                fid = open(test_name,'rb')
-                fid.close()
+                with open(test_name,'rb') as fid:
+                    pass
                 full_name = test_name
                 break
             except IOError:

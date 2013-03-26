@@ -56,9 +56,8 @@ class TestPILUtil(TestCase):
         assert_equal(misc.bytescale(np.array([3, 3, 3]), low=4), [4, 4, 4])
 
 def tst_fromimage(filename, irange):
-    fp = open(filename, "rb")
-    img = misc.fromimage(PIL.Image.open(fp))
-    fp.close()
+    with open(filename, "rb") as fp:
+        img = misc.fromimage(PIL.Image.open(fp))
     imin,imax = irange
     assert_(img.min() >= imin)
     assert_(img.max() <= imax)

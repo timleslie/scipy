@@ -96,9 +96,8 @@ def load_testing_files():
     for fn in _filenames:
         name = fn.replace(".txt", "").replace("-ml", "")
         fqfn = os.path.join(os.path.dirname(__file__), 'data', fn)
-        fp = open(fqfn)
-        eo[name] = np.loadtxt(fp)
-        fp.close()
+        with open(fqfn) as fp:
+            eo[name] = np.loadtxt(fp)
         #print "%s: %s   %s" % (name, str(eo[name].shape), str(eo[name].dtype))
     eo['pdist-boolean-inp'] = np.bool_(eo['pdist-boolean-inp'])
 

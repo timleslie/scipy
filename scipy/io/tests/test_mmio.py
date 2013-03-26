@@ -189,9 +189,9 @@ class TestMMIOCoordinate(TestCase):
     def test_read_general(self):
         """read a general matrix"""
         fn = mktemp()
-        f = open(fn,'w')
-        f.write(_general_example)
-        f.close()
+        with open(fn,'w') as f:
+            f.write(_general_example)
+
         assert_equal(mminfo(fn),(5,5,8,'coordinate','real','general'))
         a = [[1,    0,      0,       6,      0],
              [0,   10.5,    0,       0,      0],
@@ -204,9 +204,9 @@ class TestMMIOCoordinate(TestCase):
     def test_read_hermitian(self):
         """read a hermitian matrix"""
         fn = mktemp()
-        f = open(fn,'w')
-        f.write(_hermitian_example)
-        f.close()
+        with open(fn,'w') as f:
+            f.write(_hermitian_example)
+
         assert_equal(mminfo(fn),(5,5,7,'coordinate','complex','hermitian'))
         a = [[1,      0,               0,       0,              0],
              [0,     10.5,             0,    250.5 - 22.22j,    0],
@@ -219,9 +219,9 @@ class TestMMIOCoordinate(TestCase):
     def test_read_skew(self):
         """read a skew-symmetric matrix"""
         fn = mktemp()
-        f = open(fn,'w')
-        f.write(_skew_example)
-        f.close()
+        with open(fn,'w') as f:
+            f.write(_skew_example)
+
         assert_equal(mminfo(fn),(5,5,7,'coordinate','real','skew-symmetric'))
         a = [[1,      0,               0,       0,     0],
              [0,     10.5,             0,  -250.5,     0],
@@ -234,9 +234,9 @@ class TestMMIOCoordinate(TestCase):
     def test_read_symmetric(self):
         """read a symmetric matrix"""
         fn = mktemp()
-        f = open(fn,'w')
-        f.write(_symmetric_example)
-        f.close()
+        with open(fn,'w') as f:
+            f.write(_symmetric_example)
+
         assert_equal(mminfo(fn),(5,5,7,'coordinate','real','symmetric'))
         a = [[1,      0,               0,       0,     0],
              [0,     10.5,             0,   250.5,     0],
@@ -249,9 +249,9 @@ class TestMMIOCoordinate(TestCase):
     def test_read_symmetric_pattern(self):
         """read a symmetric pattern matrix"""
         fn = mktemp()
-        f = open(fn,'w')
-        f.write(_symmetric_pattern_example)
-        f.close()
+        with open(fn,'w') as f:
+            f.write(_symmetric_pattern_example)
+
         assert_equal(mminfo(fn),(5,5,7,'coordinate','pattern','symmetric'))
         a = [[1,     0,     0,     0,     0],
              [0,     1,     0,     1,     0],
